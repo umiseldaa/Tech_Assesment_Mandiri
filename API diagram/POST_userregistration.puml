@@ -1,0 +1,40 @@
+@startuml
+
+participant User
+participant system
+database user_info
+participant OTP_emailconfirm
+participant Disdukcapil
+
+User -> system++: postUserRegistration
+
+group Register
+system -> system: Validate mandatory field
+
+system -> user_info ++: check email
+user_info -> system --: response request
+
+break if email already used
+system -> User: Error 409: conflict. message: user already exist 
+end
+
+system -> OTP_emailconfirm ++: verify email
+OTP_emailconfirm -> system --: response request
+
+break email invalid
+system -> User : Error 400: bad request. message: email invalid
+end 
+
+system -> Disdukcapil ++: validate identity card
+Disdukcapil -> system --: response request
+
+break identity card not matched with user
+system -> User : Error 400: bad request. message: identity card not matched
+end 
+
+
+end
+
+system -> user_info: stored in user_info
+
+@enduml

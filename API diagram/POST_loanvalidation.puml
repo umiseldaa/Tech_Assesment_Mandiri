@@ -1,0 +1,34 @@
+@startuml
+
+participant User
+participant system
+database loan
+database payment
+participant OJK
+
+User -> system++: post new loan
+
+group Create new loan
+
+system -> OJK ++: validate eligible user
+OJK -> system --: response
+
+break there is an issue in OJK
+system -> User : Error 400: bad request. message: there is an issue in OJK, user not eligible to make a new loan
+end 
+
+system -> loan ++: check user's loan history status
+loan -> system --: response request
+
+break there is loan with active status
+system -> User : Error 400: bad request. message: Loan denied. There is a loan which still not paid off yet
+end 
+
+
+end
+
+system -> loan ++: store a new loan
+
+loan -> payment : create new payment
+
+@enduml

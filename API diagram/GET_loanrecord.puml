@@ -1,0 +1,29 @@
+@startuml
+
+participant User
+participant system
+database loan
+
+User -> system++: requestLoanRecord
+
+system -> loan ++ : getLoanRecord(user_id)
+note right
+    SELECT
+            id_loan,
+            start_date,
+            amount_of_loan,
+            loan_term,
+            loan_status
+    FROM loan
+    WHERE user_id=xxxx
+end note
+loan -> system -- 
+
+break if user_id=null
+
+system -> User: Error 400. message: there's no loan recorded
+
+
+end
+
+@enduml

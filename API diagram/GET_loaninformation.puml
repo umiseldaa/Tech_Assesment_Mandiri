@@ -1,0 +1,30 @@
+@startuml
+
+participant User
+participant system
+database payment
+
+User -> system++: requestLoanInformation
+
+system -> payment ++ : getLoanInformation(loan_id)
+note right
+    Total amount of loan
+    Total amount of loan term
+    Total loan has been paid
+    Total remaining loan
+    Total amount of remaining loan term
+    id_loan
+    payment_time
+    monthly_payment
+    payment_status
+end note
+payment -> system -- : resultRequested
+
+break loan_id == null
+
+system -> User: Error 404. message:
+
+
+end
+
+@enduml

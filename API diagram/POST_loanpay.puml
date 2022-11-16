@@ -1,0 +1,24 @@
+@startuml
+
+participant User
+participant system
+database payment
+participant third_party
+
+User -> system++: Payment validation
+
+group Monthly payment validation
+
+system -> third_party ++: validate payment
+third_party -> system --: response
+
+break payment not found
+system -> User : Error 400: bad request. message: there is no payment
+end 
+
+
+end
+
+system -> payment : update status payment
+
+@enduml

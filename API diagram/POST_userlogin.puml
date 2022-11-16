@@ -1,0 +1,50 @@
+@startuml
+
+participant User
+participant system
+database user_info
+participant third_party_biometric_info
+
+User -> system++: post user/login
+
+alt if biometric is not null
+
+system -> third_party_biometric_info : get user's biometric info
+third_party_biometric_info -> system : response requested
+
+break biometric not found
+system -> User : Error 401. message: This user has no authorized to login
+end 
+
+system -> user_info ++: verify biometric
+user_info -> system --: response request
+
+break biometric not matched
+system -> User : Error 401. message: This user has no authorized to login
+end 
+
+end
+
+alt if biometric is null
+
+system -> system : validate email and password
+system -> user_info ++: check in db user_info
+note right
+    email
+    password
+end note
+
+user_info -> system --: response request
+
+break email not found
+system -> User : Error 401. message: This user has no authorized to login
+end 
+
+break wrong password
+system -> User : Error 401. message: This user has no authorized to login
+end 
+
+end
+
+
+@enduml
